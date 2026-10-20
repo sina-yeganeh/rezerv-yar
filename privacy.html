@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حریم خصوصی — رزرو یار</title>
+<meta name="description" content="سیاست حریم خصوصی افزونه‌ی رزرو یار">
+<link rel="icon" href="logo.svg" type="image/svg+xml">
+<style>
+  @font-face { font-family: "Vazirmatn"; src: url("Vazirmatn.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
+  :root { --bg:#f6f5f1; --s:#fff; --l:#e3e0d7; --fg:#1c1b18; --m:#6a665f; --a:#0f8a5f; --as:#e2f3ec; color-scheme: light; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#121311; --s:#1b1c1a; --l:#2f312d; --fg:#ecebe6; --m:#a3a098; --a:#34c48b; --as:#173326; color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/2 "Vazirmatn", Tahoma, sans-serif; }
+  .w { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+  header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
+  header img { width: 56px; height: 56px; }
+  h1 { font-size: 26px; font-weight: 900; margin: 0; line-height: 1.4; }
+  header p { margin: 0; color: var(--m); font-size: 14px; }
+  .sum { background: var(--as); border-radius: 14px; padding: 14px 18px; margin-bottom: 24px; }
+  .sum b { color: var(--a); }
+  .sum ul { margin: 4px 0 0; padding-right: 20px; }
+  h2 { font-size: 18px; font-weight: 800; margin: 28px 0 6px; }
+  p, li { color: var(--fg); }
+  ul { padding-right: 20px; }
+  .muted { color: var(--m); font-size: 14px; }
+  code { background: var(--s); border: 1px solid var(--l); border-radius: 6px; padding: 0 6px; font-size: 13px; direction: ltr; display: inline-block; }
+  a { color: var(--a); }
+  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--l); color: var(--m); font-size: 13px; }
+</style>
+</head>
+<body>
+<div class="w">
+  <header>
+    <img src="logo.svg" alt="">
+    <div>
+      <h1>حریم خصوصی رزرو یار</h1>
+      <p>آخرین به‌روزرسانی: ۲۷ مهر ۱۴۰۵</p>
+    </div>
+  </header>
+
+  <div class="sum">
+    <b>خلاصه:</b>
+    <ul>
+      <li>رزرو یار رمز عبورت رو نمی‌بینه، نمی‌گیره و ذخیره نمی‌کنه.</li>
+      <li>هیچ اطلاعاتی از تو به سرور ما یا هیچ شخص سومی فرستاده نمی‌شه. ما اصلاً سروری نداریم که اطلاعات کاربرها رو جمع کنه.</li>
+      <li>همه‌ی انتخاب‌ها و تنظیماتت فقط داخل مرورگر خودت می‌مونه.</li>
+    </ul>
+  </div>
+
+  <h2>رزرو یار چیه؟</h2>
+  <p>رزرو یار یه افزونه‌ی مرورگره که کمک می‌کنه غذای سلف دانشگاه رو راحت‌تر و به‌موقع رزرو کنی. این افزونه یه ابزار <b>غیررسمیه</b> و هیچ ارتباطی با دانشگاه صنعتی اصفهان یا شرکت پشتیبان سامانه‌ی تغذیه نداره.</p>
+
+  <h2>به چه چیزهایی دسترسی داره؟</h2>
+  <ul>
+    <li><b>فقط سایت سامانه‌ی تغذیه</b> (<code>dining.iut.ac.ir</code>). افزونه روی هیچ سایت دیگه‌ای اجرا نمی‌شه و تاریخچه‌ی مرورت رو نمی‌بینه.</li>
+    <li>وقتی خودت توی سامانه لاگین کردی، افزونه از همون نشست (Session) مرورگرت استفاده می‌کنه تا منو رو بخونه و رزروهایی که خودت انتخاب کردی رو ثبت کنه. یعنی دقیقاً همون کارهایی که خودت با کلیک انجام می‌دی.</li>
+    <li><b>اعلان‌ها:</b> برای اینکه وقتی رزرو باز شد یا همه‌چیز رزرو شد بهت خبر بده.</li>
+    <li><b>زمان‌بندی (Alarms):</b> برای اینکه در پس‌زمینه، هر چند دقیقه یه بار وضعیت منو و رزرو رو چک کنه.</li>
+  </ul>
+
+  <h2>چه اطلاعاتی ذخیره می‌شه و کجا؟</h2>
+  <p>این‌ها فقط روی مرورگر خودت (بخش <code>chrome.storage.local</code>) ذخیره می‌شن و جای دیگه‌ای نمی‌رن:</p>
+  <ul>
+    <li>غذاهایی که برای هر وعده انتخاب کردی</li>
+    <li>تنظیمات افزونه (اعلان‌ها، فاصله‌ی بررسی و…)</li>
+    <li>شماره‌ی دانشجویی‌ات، فقط برای اینکه کد اشتراکت رو بررسی کنه</li>
+    <li>کد اشتراکت (اگه داری)</li>
+  </ul>
+  <p>با حذف افزونه، همه‌ی این اطلاعات هم پاک می‌شه.</p>
+
+  <h2>کد اشتراک چطور بررسی می‌شه؟</h2>
+  <p>کد اشتراک یه متن امضاشده‌ست که شماره‌ی دانشجویی و تاریخ انقضا داخلشه. افزونه این امضا رو <b>بدون اتصال به اینترنت</b> و داخل مرورگر خودت بررسی می‌کنه. برای فعال‌سازی هیچ درخواستی به سرور ما فرستاده نمی‌شه.</p>
+  <p>موقع خرید اشتراک، شماره‌ی دانشجویی‌ات رو خودت به پشتیبانی می‌دی تا کد برات صادر بشه. این شماره فقط برای صدور و پیگیری اشتراکت نگه داشته می‌شه و به هیچ‌کس داده نمی‌شه.</p>
+
+  <h2>بررسی نسخه‌ی جدید</h2>
+  <p>افزونه هر چند ساعت یه فایل کوچیک (<code>version.json</code>) رو از همین سایت می‌خونه تا اگه نسخه‌ی جدیدی منتشر شده بود بهت خبر بده. توی این درخواست هیچ اطلاعاتی از تو فرستاده نمی‌شه.</p>
+
+  <h2>مسئولیت استفاده</h2>
+  <p>رزرو یار فقط کارهایی رو انجام می‌ده که خودت انتخاب کردی. با این حال، چون ابزار غیررسمیه، مسئولیت استفاده ازش با خود کاربره. پیشنهاد می‌کنیم فاصله‌ی بررسی رو خیلی کم نکنی تا فشار زیادی به سامانه‌ی دانشگاه وارد نشه.</p>
+
+  <h2>سؤال داری؟</h2>
+  <p>هر سؤالی درباره‌ی حریم خصوصی داشتی، به پشتیبانی رزرو یار در تلگرام پیام بده: <a href="https://t.me/rezerv_yar_support">@rezerv_yar_support</a></p>
+
+  <footer>رزرو یار · ابزار غیررسمی رزرو غذای دانشگاه</footer>
+</div>
+</body>
+</html>
