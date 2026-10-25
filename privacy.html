@@ -5,84 +5,230 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>حریم خصوصی — رزرو یار</title>
 <meta name="description" content="سیاست حریم خصوصی افزونه‌ی رزرو یار">
+<meta name="theme-color" content="#0f8a5f">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
   @font-face { font-family: "Vazirmatn"; src: url("Vazirmatn.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-  :root { --bg:#f6f5f1; --s:#fff; --l:#e3e0d7; --fg:#1c1b18; --m:#6a665f; --a:#0f8a5f; --as:#e2f3ec; color-scheme: light; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#121311; --s:#1b1c1a; --l:#2f312d; --fg:#ecebe6; --m:#a3a098; --a:#34c48b; --as:#173326; color-scheme: dark; } }
+  :root {
+    --bg: #f6f5f1; --surface: #ffffff; --surface-2: #efede6; --line: #e3e0d7;
+    --fg: #1c1b18; --mute: #6a665f; --accent: #0f8a5f; --accent-2: #19a874; --accent-soft: #e2f3ec; --accent-fg: #fff;
+    --gold: #f5b83d; --tg: #229ed9;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101110; --surface: #1a1b19; --surface-2: #232521; --line: #2d302b;
+      --fg: #ecebe6; --mute: #a3a098; --accent: #34c48b; --accent-2: #34c48b; --accent-soft: #163024; --accent-fg: #06150f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.25);
+      color-scheme: dark;
+    }
+  }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/2 "Vazirmatn", Tahoma, sans-serif; }
-  .w { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
-  header { display: flex; align-items: center; gap: 14px; margin-bottom: 24px; }
-  header img { width: 56px; height: 56px; }
-  h1 { font-size: 26px; font-weight: 900; margin: 0; line-height: 1.4; }
-  header p { margin: 0; color: var(--m); font-size: 14px; }
-  .sum { background: var(--as); border-radius: 14px; padding: 14px 18px; margin-bottom: 24px; }
-  .sum b { color: var(--a); }
-  .sum ul { margin: 4px 0 0; padding-right: 20px; }
-  h2 { font-size: 18px; font-weight: 800; margin: 28px 0 6px; }
-  p, li { color: var(--fg); }
-  ul { padding-right: 20px; }
-  .muted { color: var(--m); font-size: 14px; }
-  code { background: var(--s); border: 1px solid var(--l); border-radius: 6px; padding: 0 6px; font-size: 13px; direction: ltr; display: inline-block; }
-  a { color: var(--a); }
-  footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid var(--l); color: var(--m); font-size: 13px; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/2 "Vazirmatn", Tahoma, sans-serif; overflow-x: hidden; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+  .glow { position: fixed; inset: -20vh -20vw auto; height: 70vh; pointer-events: none; z-index: -1;
+    background: radial-gradient(560px 280px at 70% 15%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+                radial-gradient(460px 240px at 20% 0%, color-mix(in srgb, var(--gold) 10%, transparent), transparent 70%); }
+
+  /* nav */
+  nav.top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 18px; text-decoration: none; color: inherit; }
+  .brand img { width: 34px; height: 34px; }
+  .back { display: inline-flex; align-items: center; gap: 6px; font-size: 14px; font-weight: 700; color: var(--accent); text-decoration: none;
+    background: var(--accent-soft); padding: 6px 14px; border-radius: 99px; transition: transform .2s, box-shadow .2s; }
+  .back:hover { transform: translateY(-2px); box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 22%, transparent); }
+  .back svg { width: 16px; height: 16px; transition: transform .2s; }
+  .back:hover svg { transform: translateX(-3px); }
+
+  /* hero */
+  .hero { padding: 30px 0 34px; text-align: center; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--accent); background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; }
+  .eyebrow svg { width: 15px; height: 15px; }
+  h1 { font-size: clamp(32px, 5vw, 48px); line-height: 1.35; font-weight: 900; margin: 14px 0 6px; letter-spacing: -.4px; }
+  h1 .hl { background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .date { color: var(--mute); font-size: 14px; margin: 0; }
+
+  /* summary */
+  .sum { position: relative; border-radius: 24px; padding: 2px; background: linear-gradient(135deg, var(--accent-2), var(--accent) 50%, var(--gold)); box-shadow: 0 20px 50px color-mix(in srgb, var(--accent) 18%, transparent); }
+  .sum-in { background: var(--surface); border-radius: 22px; padding: 22px; }
+  .sum-h { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 900; margin: 0 0 16px; }
+  .sum-h .badge { width: 34px; height: 34px; border-radius: 10px; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: #fff; }
+  .sum-h .badge svg { width: 18px; height: 18px; }
+  .sum-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .pt { background: var(--accent-soft); border-radius: 16px; padding: 16px; transition: transform .25s; }
+  .pt:hover { transform: translateY(-4px); }
+  .pt .i { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: var(--surface); color: var(--accent); margin-bottom: 10px; box-shadow: var(--shadow); }
+  .pt .i svg { width: 21px; height: 21px; }
+  .pt b { display: block; font-size: 16px; font-weight: 800; margin-bottom: 2px; }
+  .pt p { margin: 0; font-size: 14px; line-height: 1.8; color: var(--mute); }
+
+  /* sections */
+  .secs { display: flex; flex-direction: column; gap: 14px; margin: 34px 0 10px; }
+  .sec { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 22px 24px; box-shadow: var(--shadow); }
+  .sec h2 { display: flex; align-items: center; gap: 12px; font-size: 22px; font-weight: 900; margin: 0 0 10px; line-height: 1.5; }
+  .sec h2 .n { flex: none; width: 36px; height: 36px; border-radius: 11px; display: grid; place-items: center; font-size: 16px; font-weight: 900;
+    color: var(--accent); background: var(--accent-soft); }
+  .sec p { margin: 0 0 10px; }
+  .sec p:last-child { margin-bottom: 0; }
+  .sec ul { margin: 0 0 10px; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+  .sec li { position: relative; padding-right: 26px; }
+  .sec li::before { content: ""; position: absolute; right: 4px; top: .8em; width: 9px; height: 9px; border-radius: 3px; background: var(--accent); transform: rotate(45deg); }
+  code { background: var(--surface-2); border: 1px solid var(--line); border-radius: 7px; padding: 0 7px; font-size: 13px; direction: ltr; display: inline-block; font-family: ui-monospace, Consolas, monospace; }
+  .sec b { font-weight: 800; }
+
+  /* contact */
+  .contact { text-align: center; }
+  .copy-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px 10px 14px; margin-top: 6px;
+    border-radius: 14px; border: 1px solid var(--line); background: var(--surface-2); color: var(--fg); font: inherit; cursor: pointer; text-align: right;
+    transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s, border-color .2s; }
+  .copy-btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%); transform: translateX(120%); transition: transform .7s; pointer-events: none; }
+  .copy-btn:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--tg) 60%, var(--line)); box-shadow: 0 14px 30px rgba(34,158,217,.18); }
+  .copy-btn:hover::after { transform: translateX(-120%); }
+  .copy-btn:active { transform: scale(.97); }
+  .copy-btn .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: color-mix(in srgb, var(--tg) 14%, transparent); color: var(--tg); transition: transform .3s; }
+  .copy-btn:hover .ic { transform: rotate(-8deg) scale(1.06); }
+  .copy-btn .ic svg { width: 20px; height: 20px; }
+  .copy-btn .tx { display: flex; flex-direction: column; line-height: 1.5; }
+  .copy-btn .tx b { font-size: 15px; font-weight: 800; }
+  .copy-btn .tx span { font-size: 13px; opacity: .75; direction: ltr; text-align: right; font-family: ui-monospace, Consolas, monospace; }
+  .copy-btn .cp { width: 18px; height: 18px; opacity: .55; margin-right: auto; }
+  .copy-btn .ok-ico { display: none; } .copy-btn.done .cp-ico { display: none; } .copy-btn.done .ok-ico { display: block; opacity: 1; color: var(--accent); }
+
+  footer { padding: 30px 0 40px; text-align: center; color: var(--mute); font-size: 13.5px; }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  footer .sep { margin: 0 8px; opacity: .5; }
+
+  #toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); opacity: 0; background: var(--fg); color: var(--bg);
+    padding: 10px 18px; border-radius: 12px; font-size: 14px; font-weight: 700; box-shadow: 0 12px 30px rgba(0,0,0,.25); transition: all .3s cubic-bezier(.2,.8,.2,1); z-index: 50; pointer-events: none; white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  .rv { opacity: 0; transform: translateY(22px); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+
+  @media (max-width: 720px) {
+    .sum-grid { grid-template-columns: 1fr; }
+    .sec { padding: 18px; }
+    .sec h2 { font-size: 19px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rv { opacity: 1; transform: none; }
+  }
 </style>
 </head>
 <body>
-<div class="w">
-  <header>
-    <img src="logo.svg" alt="">
-    <div>
-      <h1>حریم خصوصی رزرو یار</h1>
-      <p>آخرین به‌روزرسانی: ۲۷ مهر ۱۴۰۵</p>
-    </div>
+<div class="glow"></div>
+<div class="wrap">
+  <nav class="top">
+    <a class="brand" href="./"><img src="logo.svg" alt="">رزرو یار</a>
+    <a class="back" href="./">صفحه‌ی اصلی<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg></a>
+  </nav>
+
+  <header class="hero">
+    <span class="eyebrow"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>حریم خصوصی</span>
+    <h1>اطلاعاتت <span class="hl">مال خودته.</span></h1>
+    <p class="date">آخرین به‌روزرسانی: ۲۷ مهر ۱۴۰۵</p>
   </header>
 
-  <div class="sum">
-    <b>خلاصه:</b>
-    <ul>
-      <li>رزرو یار رمز عبورت رو نمی‌بینه، نمی‌گیره و ذخیره نمی‌کنه.</li>
-      <li>هیچ اطلاعاتی از تو به سرور ما یا هیچ شخص سومی فرستاده نمی‌شه. ما اصلاً سروری نداریم که اطلاعات کاربرها رو جمع کنه.</li>
-      <li>همه‌ی انتخاب‌ها و تنظیماتت فقط داخل مرورگر خودت می‌مونه.</li>
-    </ul>
+  <div class="sum rv">
+    <div class="sum-in">
+      <div class="sum-h"><span class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg></span>خلاصه در سه خط</div>
+      <div class="sum-grid">
+        <div class="pt">
+          <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+          <b>رمزت امنه</b><p>رزرو یار رمز عبورت رو نمی‌بینه، نمی‌گیره و ذخیره نمی‌کنه.</p>
+        </div>
+        <div class="pt">
+          <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20M17.5 17.5H7a5 5 0 0 1-1-9.9M9.6 5.4A6 6 0 0 1 18 9a4.5 4.5 0 0 1 3 7.7"/></svg></div>
+          <b>بدون سرور</b><p>هیچ اطلاعاتی به سرور ما یا شخص سومی فرستاده نمی‌شه. ما اصلاً سروری برای جمع کردن اطلاعات نداریم.</p>
+        </div>
+        <div class="pt">
+          <div class="i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="13" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+          <b>فقط روی دستگاه خودت</b><p>همه‌ی انتخاب‌ها و تنظیماتت فقط داخل مرورگر خودت می‌مونه.</p>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h2>رزرو یار چیه؟</h2>
-  <p>رزرو یار یه افزونه‌ی مرورگره که کمک می‌کنه غذای سلف دانشگاه رو راحت‌تر و به‌موقع رزرو کنی. این افزونه یه ابزار <b>غیررسمیه</b> و هیچ ارتباطی با دانشگاه صنعتی اصفهان یا شرکت پشتیبان سامانه‌ی تغذیه نداره.</p>
+  <div class="secs">
+    <section class="sec rv">
+      <h2><span class="n">۱</span>رزرو یار چیه؟</h2>
+      <p>رزرو یار یه افزونه‌ی مرورگره که کمک می‌کنه غذای سلف دانشگاه رو راحت‌تر و به‌موقع رزرو کنی. این افزونه یه ابزار <b>غیررسمیه</b> و هیچ ارتباطی با دانشگاه صنعتی اصفهان یا شرکت پشتیبان سامانه‌ی تغذیه نداره.</p>
+    </section>
 
-  <h2>به چه چیزهایی دسترسی داره؟</h2>
-  <ul>
-    <li><b>فقط سایت سامانه‌ی تغذیه</b> (<code>dining.iut.ac.ir</code>). افزونه روی هیچ سایت دیگه‌ای اجرا نمی‌شه و تاریخچه‌ی مرورت رو نمی‌بینه.</li>
-    <li>وقتی خودت توی سامانه لاگین کردی، افزونه از همون نشست (Session) مرورگرت استفاده می‌کنه تا منو رو بخونه و رزروهایی که خودت انتخاب کردی رو ثبت کنه. یعنی دقیقاً همون کارهایی که خودت با کلیک انجام می‌دی.</li>
-    <li><b>اعلان‌ها:</b> برای اینکه وقتی رزرو باز شد یا همه‌چیز رزرو شد بهت خبر بده.</li>
-    <li><b>زمان‌بندی (Alarms):</b> برای اینکه در پس‌زمینه، هر چند دقیقه یه بار وضعیت منو و رزرو رو چک کنه.</li>
-  </ul>
+    <section class="sec rv">
+      <h2><span class="n">۲</span>به چه چیزهایی دسترسی داره؟</h2>
+      <ul>
+        <li><b>فقط سایت سامانه‌ی تغذیه</b> (<code>dining.iut.ac.ir</code>). افزونه روی هیچ سایت دیگه‌ای اجرا نمی‌شه و تاریخچه‌ی مرورت رو نمی‌بینه.</li>
+        <li>وقتی خودت توی سامانه لاگین کردی، افزونه از همون نشست (Session) مرورگرت استفاده می‌کنه تا منو رو بخونه و رزروهایی که خودت انتخاب کردی رو ثبت کنه؛ یعنی دقیقاً همون کارهایی که خودت با کلیک انجام می‌دی.</li>
+        <li><b>اعلان‌ها:</b> برای اینکه وقتی منو اعلام شد، رزرو باز شد یا همه‌چیز رزرو شد بهت خبر بده.</li>
+        <li><b>زمان‌بندی (Alarms):</b> برای اینکه در پس‌زمینه، هر چند وقت یه بار وضعیت منو و رزرو رو چک کنه.</li>
+      </ul>
+    </section>
 
-  <h2>چه اطلاعاتی ذخیره می‌شه و کجا؟</h2>
-  <p>این‌ها فقط روی مرورگر خودت (بخش <code>chrome.storage.local</code>) ذخیره می‌شن و جای دیگه‌ای نمی‌رن:</p>
-  <ul>
-    <li>غذاهایی که برای هر وعده انتخاب کردی</li>
-    <li>تنظیمات افزونه (اعلان‌ها، فاصله‌ی بررسی و…)</li>
-    <li>شماره‌ی دانشجویی‌ات، فقط برای اینکه کد اشتراکت رو بررسی کنه</li>
-    <li>کد اشتراکت (اگه داری)</li>
-  </ul>
-  <p>با حذف افزونه، همه‌ی این اطلاعات هم پاک می‌شه.</p>
+    <section class="sec rv">
+      <h2><span class="n">۳</span>چه اطلاعاتی ذخیره می‌شه و کجا؟</h2>
+      <p>این‌ها فقط روی مرورگر خودت (بخش <code>chrome.storage.local</code>) ذخیره می‌شن و جای دیگه‌ای نمی‌رن:</p>
+      <ul>
+        <li>غذاهایی که برای هر وعده انتخاب کردی</li>
+        <li>تنظیمات افزونه (اعلان‌ها، فاصله‌ی بررسی و…)</li>
+        <li>شماره‌ی دانشجویی‌ت، فقط برای بررسی کد اشتراکت</li>
+        <li>کد اشتراکت (اگه داری)</li>
+      </ul>
+      <p>با حذف افزونه، همه‌ی این اطلاعات هم پاک می‌شه.</p>
+    </section>
 
-  <h2>کد اشتراک چطور بررسی می‌شه؟</h2>
-  <p>کد اشتراک یه متن امضاشده‌ست که شماره‌ی دانشجویی و تاریخ انقضا داخلشه. افزونه این امضا رو <b>بدون اتصال به اینترنت</b> و داخل مرورگر خودت بررسی می‌کنه. برای فعال‌سازی هیچ درخواستی به سرور ما فرستاده نمی‌شه.</p>
-  <p>موقع خرید اشتراک، شماره‌ی دانشجویی‌ات رو خودت به پشتیبانی می‌دی تا کد برات صادر بشه. این شماره فقط برای صدور و پیگیری اشتراکت نگه داشته می‌شه و به هیچ‌کس داده نمی‌شه.</p>
+    <section class="sec rv">
+      <h2><span class="n">۴</span>کد اشتراک چطور بررسی می‌شه؟</h2>
+      <p>کد اشتراک یه متن امضاشده‌ست که شماره‌ی دانشجویی و تاریخ انقضا داخلشه. افزونه این امضا رو <b>بدون اتصال به اینترنت</b> و داخل مرورگر خودت بررسی می‌کنه. برای فعال‌سازی هیچ درخواستی به سرور ما فرستاده نمی‌شه.</p>
+      <p>موقع خرید اشتراک، شماره‌ی دانشجویی‌ت رو خودت به پشتیبانی می‌دی تا کد برات صادر بشه. این شماره فقط برای صدور و پیگیری اشتراکت نگه داشته می‌شه و به هیچ‌کس داده نمی‌شه.</p>
+    </section>
 
-  <h2>بررسی نسخه‌ی جدید</h2>
-  <p>افزونه هر چند ساعت یه فایل کوچیک (<code>version.json</code>) رو از همین سایت می‌خونه تا اگه نسخه‌ی جدیدی منتشر شده بود بهت خبر بده. توی این درخواست هیچ اطلاعاتی از تو فرستاده نمی‌شه.</p>
+    <section class="sec rv">
+      <h2><span class="n">۵</span>بررسی نسخه‌ی جدید</h2>
+      <p>افزونه هر چند ساعت یه فایل کوچیک (<code>version.json</code>) رو از همین سایت می‌خونه تا اگه نسخه‌ی جدیدی منتشر شده بود بهت خبر بده. توی این درخواست هیچ اطلاعاتی از تو فرستاده نمی‌شه.</p>
+    </section>
 
-  <h2>مسئولیت استفاده</h2>
-  <p>رزرو یار فقط کارهایی رو انجام می‌ده که خودت انتخاب کردی. با این حال، چون ابزار غیررسمیه، مسئولیت استفاده ازش با خود کاربره. پیشنهاد می‌کنیم فاصله‌ی بررسی رو خیلی کم نکنی تا فشار زیادی به سامانه‌ی دانشگاه وارد نشه.</p>
+    <section class="sec rv">
+      <h2><span class="n">۶</span>مسئولیت استفاده</h2>
+      <p>رزرو یار فقط کارهایی رو انجام می‌ده که خودت انتخاب کردی. با این حال، چون ابزار غیررسمیه، مسئولیت استفاده ازش با خود کاربره. پیشنهاد می‌کنیم فاصله‌ی بررسی رو خیلی کم نکنی تا فشار زیادی به سامانه‌ی دانشگاه وارد نشه.</p>
+    </section>
 
-  <h2>سؤال داری؟</h2>
-  <p>هر سؤالی درباره‌ی حریم خصوصی داشتی، به پشتیبانی رزرو یار در تلگرام پیام بده: <a href="https://t.me/rezerv_yar_support">@rezerv_yar_support</a></p>
-
-  <footer>رزرو یار · ابزار غیررسمی رزرو غذای دانشگاه</footer>
+    <section class="sec contact rv">
+      <h2 style="justify-content:center"><span class="n">؟</span>سؤال داری؟</h2>
+      <p>هر سؤالی درباره‌ی حریم خصوصی داشتی، به پشتیبانی رزرو یار در تلگرام پیام بده.</p>
+      <button class="copy-btn" data-copy="@rezerv_yar_support" data-msg="آیدی پشتیبانی کپی شد — توی تلگرام جستجوش کن">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg></span>
+        <span class="tx"><b>پشتیبانی</b><span>@rezerv_yar_support</span></span>
+        <svg class="cp cp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+        <svg class="cp ok-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+      </button>
+    </section>
+  </div>
 </div>
+
+<footer>
+  <div class="wrap"><a href="./">رزرو یار</a><span class="sep">•</span>ابزار غیررسمی رزرو غذای دانشگاه</div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+  const toast = document.getElementById('toast'); let tt;
+  function showToast(m) { toast.textContent = m; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2200); }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (e) {
+      const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {} ta.remove(); return ok; }
+  }
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    const ok = await copyText(b.dataset.copy);
+    showToast(ok ? '✔ ' + b.dataset.msg : 'آیدی: ' + b.dataset.copy);
+    if (ok) { b.classList.add('done'); setTimeout(() => b.classList.remove('done'), 1600); }
+  }));
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .1 }) : null;
+  document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+</script>
 </body>
 </html>
