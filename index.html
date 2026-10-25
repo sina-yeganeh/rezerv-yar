@@ -3,27 +3,304 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>رزرو یار</title>
-<meta name="description" content="رزرو خودکار غذای سلف دانشگاه، به محض باز شدن رزرو">
+<title>رزرو یار — رزرو خودکار غذای دانشگاه</title>
+<meta name="description" content="غذاهات رو یه بار انتخاب کن؛ رزرو یار به محض باز شدن رزرو، خودش همه رو برات می‌گیره.">
+<meta name="theme-color" content="#0f8a5f">
 <link rel="icon" href="logo.svg" type="image/svg+xml">
 <style>
   @font-face { font-family: "Vazirmatn"; src: url("Vazirmatn.woff2") format("woff2"); font-weight: 100 900; font-display: swap; }
-  :root { --bg:#f6f5f1; --fg:#1c1b18; --m:#6a665f; --a:#0f8a5f; --as:#e2f3ec; color-scheme: light; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#121311; --fg:#ecebe6; --m:#a3a098; --a:#34c48b; --as:#173326; color-scheme: dark; } }
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: var(--bg); color: var(--fg); font: 16px/1.9 "Vazirmatn", Tahoma, sans-serif; text-align: center; padding: 16px; box-sizing: border-box; }
-  img { width: 96px; height: 96px; }
-  h1 { font-size: 34px; font-weight: 900; margin: 12px 0 0; }
-  p { color: var(--m); margin: 4px 0 20px; }
-  nav { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
-  a { color: var(--a); background: var(--as); padding: 8px 18px; border-radius: 10px; text-decoration: none; font-weight: 700; }
+  :root {
+    --bg: #f6f5f1; --surface: #ffffff; --surface-2: #efede6; --line: #e3e0d7;
+    --fg: #1c1b18; --mute: #6a665f; --accent: #0f8a5f; --accent-2: #19a874; --accent-soft: #e2f3ec; --accent-fg: #fff;
+    --gold: #f5b83d; --tg: #229ed9;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 10px 30px rgba(0,0,0,.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #101110; --surface: #1a1b19; --surface-2: #232521; --line: #2d302b;
+      --fg: #ecebe6; --mute: #a3a098; --accent: #34c48b; --accent-2: #34c48b; --accent-soft: #163024; --accent-fg: #06150f;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 10px 30px rgba(0,0,0,.25);
+      color-scheme: dark;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 400 16px/1.9 "Vazirmatn", Tahoma, sans-serif; overflow-x: hidden; }
+  a { color: inherit; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+
+  /* background glow */
+  .glow { position: fixed; inset: -20vh -20vw auto; height: 80vh; pointer-events: none; z-index: -1;
+    background: radial-gradient(600px 300px at 70% 20%, color-mix(in srgb, var(--accent) 18%, transparent), transparent 70%),
+                radial-gradient(500px 260px at 20% 0%, color-mix(in srgb, var(--gold) 12%, transparent), transparent 70%); }
+
+  /* ---------- nav ---------- */
+  nav.top { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 900; font-size: 18px; text-decoration: none; }
+  .brand img { width: 34px; height: 34px; }
+  nav.top .links { display: flex; gap: 18px; font-size: 14px; }
+  nav.top .links a { text-decoration: none; color: var(--mute); transition: color .2s; }
+  nav.top .links a:hover { color: var(--accent); }
+
+  /* ---------- hero ---------- */
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 40px 0 70px; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 700; color: var(--accent);
+    background: var(--accent-soft); padding: 4px 12px; border-radius: 99px; }
+  .eyebrow .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); animation: pulse 1.8s ease-in-out infinite; }
+  h1 { font-size: clamp(34px, 5.4vw, 56px); line-height: 1.3; font-weight: 900; margin: 16px 0 12px; letter-spacing: -.5px; }
+  h1 .hl { background: linear-gradient(90deg, var(--accent), var(--accent-2), var(--gold)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    background-size: 200% 100%; animation: shimmer 6s ease-in-out infinite; }
+  .lead { font-size: 18px; color: var(--mute); margin: 0 0 28px; max-width: 520px; }
+
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .copy-btn { position: relative; overflow: hidden; display: inline-flex; align-items: center; gap: 12px; padding: 10px 18px 10px 14px;
+    border-radius: 14px; border: 1px solid var(--line); background: var(--surface); color: var(--fg); font: inherit; cursor: pointer; text-align: right;
+    box-shadow: var(--shadow); transition: transform .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s, border-color .2s; }
+  .copy-btn::after { content: ""; position: absolute; inset: 0; background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,.35) 50%, transparent 70%);
+    transform: translateX(120%); transition: transform .7s; pointer-events: none; }
+  .copy-btn:hover { transform: translateY(-3px); border-color: color-mix(in srgb, var(--tg) 60%, var(--line)); box-shadow: 0 14px 30px rgba(34,158,217,.18); }
+  .copy-btn:hover::after { transform: translateX(-120%); }
+  .copy-btn:active { transform: translateY(0) scale(.97); }
+  .copy-btn.primary { background: linear-gradient(135deg, var(--accent-2), var(--accent)); border-color: transparent; color: #fff; }
+  .copy-btn.primary:hover { box-shadow: 0 14px 30px color-mix(in srgb, var(--accent) 35%, transparent); }
+  .copy-btn .ic { width: 38px; height: 38px; border-radius: 11px; display: grid; place-items: center; background: color-mix(in srgb, var(--tg) 14%, transparent); color: var(--tg); flex: none; transition: transform .3s; }
+  .copy-btn.primary .ic { background: rgba(255,255,255,.2); color: #fff; }
+  .copy-btn:hover .ic { transform: rotate(-8deg) scale(1.06); }
+  .copy-btn .ic svg { width: 20px; height: 20px; }
+  .copy-btn .tx { display: flex; flex-direction: column; line-height: 1.5; }
+  .copy-btn .tx b { font-size: 15px; font-weight: 800; }
+  .copy-btn .tx span { font-size: 13px; opacity: .75; direction: ltr; text-align: right; font-family: ui-monospace, Consolas, monospace; }
+  .copy-btn .cp { width: 18px; height: 18px; opacity: .55; margin-right: auto; padding-right: 0; flex: none; transition: opacity .2s; }
+  .copy-btn:hover .cp { opacity: 1; }
+  .copy-btn.done .cp-ico { display: none; } .copy-btn .ok-ico { display: none; } .copy-btn.done .ok-ico { display: block; }
+  .hint { font-size: 12.5px; color: var(--mute); margin-top: 10px; }
+
+  /* ---------- mock popup ---------- */
+  .mock { position: relative; }
+  .mock .card { background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 16px; box-shadow: 0 30px 60px rgba(0,0,0,.12);
+    transform: rotate(-2deg); animation: float 6s ease-in-out infinite; }
+  .mock .bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .mock .bar .t { display: flex; align-items: center; gap: 8px; font-weight: 800; }
+  .mock .bar img { width: 26px; height: 26px; }
+  .mock .pill { font-size: 11.5px; font-weight: 700; padding: 2px 10px; border-radius: 99px; background: var(--accent); color: var(--accent-fg); animation: pulse 2s infinite; }
+  .mock .day { display: grid; grid-template-columns: 54px repeat(3, 1fr); gap: 6px; align-items: center; padding: 6px 0; border-top: 1px dashed var(--line); font-size: 12.5px; }
+  .mock .day b { font-weight: 800; font-size: 13px; }
+  .mock .slot { background: var(--surface-2); border-radius: 9px; padding: 5px 7px; min-height: 40px; display: flex; flex-direction: column; justify-content: center; line-height: 1.5; position: relative; overflow: hidden; }
+  .mock .slot small { color: var(--mute); font-size: 10.5px; }
+  .mock .slot.ok { background: var(--accent-soft); color: var(--accent); font-weight: 700; padding-left: 20px; }
+  .mock .slot.ok::before { content: "✓"; position: absolute; left: 7px; top: 50%; transform: translateY(-50%) scale(0); font-weight: 900; animation: pop .5s forwards; }
+  .mock .day:nth-of-type(2) .slot.ok::before { animation-delay: 1.2s; } .mock .day:nth-of-type(3) .slot.ok::before { animation-delay: 1.6s; } .mock .day:nth-of-type(4) .slot.ok::before { animation-delay: 2s; }
+  .mock .toast { position: absolute; left: -18px; bottom: -22px; background: #1b1c1a; color: #ecebe6; border: 1.5px solid #34c48b; border-radius: 14px; padding: 9px 14px;
+    font-size: 13px; box-shadow: 0 16px 34px rgba(0,0,0,.3); display: flex; gap: 10px; align-items: center; opacity: 0; transform: translateY(10px); animation: toastIn .6s 2.6s forwards; }
+  .mock .toast img { width: 28px; height: 28px; }
+  .mock .toast b { color: #34c48b; display: block; font-size: 12.5px; }
+
+  /* ---------- sections ---------- */
+  section { padding: 56px 0; }
+  .sec-h { text-align: center; margin-bottom: 34px; }
+  .sec-h h2 { font-size: clamp(24px, 3.4vw, 32px); font-weight: 900; margin: 0 0 6px; }
+  .sec-h p { color: var(--mute); margin: 0; }
+  .features { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .feat { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 20px; box-shadow: var(--shadow); transition: transform .25s, border-color .25s; }
+  .feat:hover { transform: translateY(-5px); border-color: var(--accent); }
+  .feat .fi { width: 46px; height: 46px; border-radius: 13px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent); margin-bottom: 12px; transition: transform .3s; }
+  .feat:hover .fi { transform: scale(1.1) rotate(-6deg); }
+  .feat .fi svg { width: 24px; height: 24px; }
+  .feat h3 { font-size: 17px; font-weight: 800; margin: 0 0 4px; }
+  .feat p { margin: 0; color: var(--mute); font-size: 14.5px; line-height: 1.8; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; counter-reset: s; }
+  .step { position: relative; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px 20px 20px; }
+  .step .n { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; font-weight: 900; font-size: 18px; color: #fff;
+    background: linear-gradient(135deg, var(--accent-2), var(--accent)); margin-bottom: 12px; box-shadow: 0 8px 18px color-mix(in srgb, var(--accent) 30%, transparent); }
+  .step h3 { margin: 0 0 4px; font-size: 17px; font-weight: 800; }
+  .step p { margin: 0; color: var(--mute); font-size: 14.5px; line-height: 1.8; }
+
+  .final { text-align: center; background: linear-gradient(135deg, var(--accent-2), var(--accent)); color: #fff; border-radius: 26px; padding: 44px 20px; position: relative; overflow: hidden; }
+  .final::before { content: ""; position: absolute; width: 380px; height: 380px; border-radius: 50%; background: rgba(255,255,255,.08); top: -180px; left: -120px; }
+  .final h2 { margin: 0 0 6px; font-size: clamp(22px, 3.2vw, 30px); font-weight: 900; position: relative; }
+  .final p { margin: 0 0 22px; opacity: .9; position: relative; }
+  .final .cta { justify-content: center; position: relative; }
+  .final .copy-btn { background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.3); color: #fff; box-shadow: none; }
+  .final .copy-btn .ic { background: rgba(255,255,255,.2); color: #fff; }
+  .final .copy-btn:hover { background: rgba(255,255,255,.22); border-color: rgba(255,255,255,.6); box-shadow: 0 14px 30px rgba(0,0,0,.18); }
+
+  footer { padding: 30px 0 40px; text-align: center; color: var(--mute); font-size: 13.5px; }
+  footer a { color: var(--accent); text-decoration: none; font-weight: 700; }
+  footer a:hover { text-decoration: underline; }
+  footer .sep { margin: 0 8px; opacity: .5; }
+
+  /* ---------- toast ---------- */
+  #toast { position: fixed; bottom: 24px; left: 50%; transform: translate(-50%, 30px); opacity: 0; background: var(--fg); color: var(--bg);
+    padding: 10px 18px; border-radius: 12px; font-size: 14px; font-weight: 700; box-shadow: 0 12px 30px rgba(0,0,0,.25); transition: all .3s cubic-bezier(.2,.8,.2,1); z-index: 50; pointer-events: none; white-space: nowrap; }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* ---------- reveal ---------- */
+  .rv { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.2,1); }
+  .rv.in { opacity: 1; transform: none; }
+  .features .rv:nth-child(2), .steps .rv:nth-child(2) { transition-delay: .08s; }
+  .features .rv:nth-child(3), .steps .rv:nth-child(3) { transition-delay: .16s; }
+  .features .rv:nth-child(4) { transition-delay: .24s; }
+
+  @keyframes pulse { 50% { opacity: .45; } }
+  @keyframes float { 0%,100% { transform: rotate(-2deg) translateY(0); } 50% { transform: rotate(-2deg) translateY(-12px); } }
+  @keyframes shimmer { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+  @keyframes pop { to { transform: translateY(-50%) scale(1); } }
+  @keyframes toastIn { to { opacity: 1; transform: none; } }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: 1fr; text-align: center; padding-top: 20px; }
+    .lead { margin-inline: auto; }
+    .cta { justify-content: center; }
+    .mock { max-width: 440px; margin: 10px auto 30px; }
+    .features { grid-template-columns: repeat(2, 1fr); }
+    .steps { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 520px) {
+    nav.top .links { display: none; }
+    .features { grid-template-columns: 1fr; }
+    .copy-btn { width: 100%; }
+    .mock .toast { left: 8px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .rv { opacity: 1; transform: none; }
+    .mock .toast { opacity: 1; transform: none; }
+    .mock .slot.ok::before { transform: translateY(-50%) scale(1); }
+  }
 </style>
 </head>
 <body>
-<main>
-  <img src="logo.svg" alt="">
-  <h1>رزرو یار</h1>
-  <p>رزرو خودکار غذای سلف دانشگاه، به محض باز شدن رزرو</p>
-  <nav><a href="https://t.me/rezerv_yar">کانال تلگرام</a><a href="https://t.me/rezerv_yar_support">پشتیبانی</a><a href="privacy.html">حریم خصوصی</a></nav>
-</main>
+<div class="glow"></div>
+<div class="wrap">
+  <nav class="top">
+    <a class="brand" href="./"><img src="logo.svg" alt="">رزرو یار</a>
+    <div class="links">
+      <a href="#features">قابلیت‌ها</a>
+      <a href="#how">چطور کار می‌کنه</a>
+      <a href="privacy.html">حریم خصوصی</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div>
+      <span class="eyebrow"><span class="dot"></span>دانشگاه صنعتی اصفهان</span>
+      <h1>دوشنبه‌شب‌ها<br><span class="hl">پای سایت سلف نشین.</span></h1>
+      <p class="lead">غذاهای هفته رو یه بار انتخاب کن؛ رزرو یار به محض باز شدن رزرو، خودش همه رو برات می‌گیره و خبرت می‌کنه.</p>
+      <div class="cta">
+        <button class="copy-btn primary" data-copy="@rezerv_yar" data-msg="آیدی کانال کپی شد — توی تلگرام جستجوش کن">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 4.2 2.9 11.3c-1.3.5-1.3 1.2-.2 1.6l4.7 1.5 1.8 5.6c.2.6.1.9.8.9.5 0 .7-.2 1-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5zM8.6 14l9.5-6c.4-.3.9-.1.5.3l-8 7.3-.3 3.4z"/></svg></span>
+          <span class="tx"><b>کانال تلگرام</b><span>@rezerv_yar</span></span>
+          <svg class="cp cp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="cp ok-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+        </button>
+        <button class="copy-btn" data-copy="@rezerv_yar_support" data-msg="آیدی پشتیبانی کپی شد — توی تلگرام جستجوش کن">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg></span>
+          <span class="tx"><b>پشتیبانی</b><span>@rezerv_yar_support</span></span>
+          <svg class="cp cp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="cp ok-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+        </button>
+      </div>
+      <div class="hint">روی هر دکمه بزنی، آیدی کپی می‌شه.</div>
+    </div>
+
+    <div class="mock" aria-hidden="true">
+      <div class="card">
+        <div class="bar"><span class="t"><img src="logo.svg" alt="">رزرو یار</span><span class="pill">آماده‌باش</span></div>
+        <div class="day"><b>شنبه</b><span class="slot ok">چلو جوجه<small>مرکزی</small></span><span class="slot ok">مرغ و قارچ<small>مرکزی</small></span><span class="slot">—<small>نگیر</small></span></div>
+        <div class="day"><b>یکشنبه</b><span class="slot ok">کوبیده مرغ<small>مرکزی</small></span><span class="slot ok">املت<small>مرکزی</small></span><span class="slot">—<small>نگیر</small></span></div>
+        <div class="day"><b>دوشنبه</b><span class="slot ok">زرشک‌پلو<small>مرکزی</small></span><span class="slot ok">کوبیده مرغ<small>نیکان</small></span><span class="slot">—<small>نگیر</small></span></div>
+      </div>
+      <div class="toast"><img src="logo.svg" alt=""><span><b>رزرو یار</b>همه‌ی وعده‌ها رزرو شدن ✅</span></div>
+    </div>
+  </header>
+</div>
+
+<section id="features">
+  <div class="wrap">
+    <div class="sec-h rv"><h2>هر چی برای یه رزرو بی‌دردسر لازمه</h2><p>یه بار تنظیمش کن و بقیه‌ش با رزرو یار.</p></div>
+    <div class="features">
+      <div class="feat rv">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2.5 2M9 2h6"/></svg></div>
+        <h3>آماده‌باش خودکار</h3><p>به محض باز شدن رزرو، انتخاب‌هات رو خودش ثبت می‌کنه. حتی اگه سر کلاس باشی.</p>
+      </div>
+      <div class="feat rv">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+        <h3>اعلان به‌موقع</h3><p>وقتی منو اعلام شد، رزرو باز شد یا همه‌چیز رزرو شد، خبرت می‌کنه.</p>
+      </div>
+      <div class="feat rv">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg></div>
+        <h3>تغییر و لغو سریع</h3><p>نظرت عوض شد؟ با یه کلیک غذا رو عوض کن یا رزرو رو لغو کن.</p>
+      </div>
+      <div class="feat rv">
+        <div class="fi"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <h3>امن و خصوصی</h3><p>رمزت رو نمی‌بینه و هیچ اطلاعاتی از مرورگرت بیرون نمی‌ره.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="wrap">
+    <div class="sec-h rv"><h2>چطور کار می‌کنه؟</h2><p>سه قدم، کمتر از یه دقیقه.</p></div>
+    <div class="steps">
+      <div class="step rv"><div class="n">۱</div><h3>نصب کن</h3><p>افزونه رو روی مرورگرت (Brave، Chrome یا Edge) نصب کن و وارد سامانه‌ی تغذیه شو.</p></div>
+      <div class="step rv"><div class="n">۲</div><h3>غذاهات رو انتخاب کن</h3><p>منوی هفته‌ی بعد رو ببین و برای هر وعده غذا و سلف دلخواهت رو انتخاب کن.</p></div>
+      <div class="step rv"><div class="n">۳</div><h3>«آماده‌باش» رو بزن</h3><p>بقیه‌ش با رزرو یار. وقتی رزرو باز شد، همه رو می‌گیره و بهت اعلان می‌ده.</p></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="final rv">
+      <h2>آماده‌ای دوشنبه‌شب‌هات رو پس بگیری؟</h2>
+      <p>برای دریافت افزونه و اخبار، کانال رو دنبال کن.</p>
+      <div class="cta">
+        <button class="copy-btn" data-copy="@rezerv_yar" data-msg="آیدی کانال کپی شد — توی تلگرام جستجوش کن">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.4 4.2 2.9 11.3c-1.3.5-1.3 1.2-.2 1.6l4.7 1.5 1.8 5.6c.2.6.1.9.8.9.5 0 .7-.2 1-.5l2.3-2.2 4.8 3.5c.9.5 1.5.2 1.7-.8l3.1-14.7c.3-1.3-.5-1.9-1.5-1.5zM8.6 14l9.5-6c.4-.3.9-.1.5.3l-8 7.3-.3 3.4z"/></svg></span>
+          <span class="tx"><b>کانال تلگرام</b><span>@rezerv_yar</span></span>
+          <svg class="cp cp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="cp ok-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+        </button>
+        <button class="copy-btn" data-copy="@rezerv_yar_support" data-msg="آیدی پشتیبانی کپی شد — توی تلگرام جستجوش کن">
+          <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0 1 18 0v6"/><path d="M21 19a2 2 0 0 1-2 2h-1v-6h3zM3 19a2 2 0 0 0 2 2h1v-6H3z"/></svg></span>
+          <span class="tx"><b>پشتیبانی</b><span>@rezerv_yar_support</span></span>
+          <svg class="cp cp-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+          <svg class="cp ok-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5 9-10"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <a href="privacy.html">حریم خصوصی</a><span class="sep">•</span>رزرو یار یه ابزار غیررسمیه و ارتباطی با دانشگاه نداره.
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+  // کپی آیدی
+  const toast = document.getElementById('toast'); let tt;
+  function showToast(msg) { toast.textContent = msg; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(() => toast.classList.remove('show'), 2200); }
+  async function copyText(t) {
+    try { await navigator.clipboard.writeText(t); return true; } catch (e) {
+      const ta = document.createElement('textarea'); ta.value = t; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select();
+      let ok = false; try { ok = document.execCommand('copy'); } catch (e2) {} ta.remove(); return ok;
+    }
+  }
+  document.querySelectorAll('[data-copy]').forEach(b => b.addEventListener('click', async () => {
+    const ok = await copyText(b.dataset.copy);
+    showToast(ok ? '✔ ' + b.dataset.msg : 'آیدی: ' + b.dataset.copy);
+    if (ok) { b.classList.add('done'); setTimeout(() => b.classList.remove('done'), 1600); }
+  }));
+  // نمایش تدریجی هنگام اسکرول
+  const io = 'IntersectionObserver' in window ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .15 }) : null;
+  document.querySelectorAll('.rv').forEach(el => io ? io.observe(el) : el.classList.add('in'));
+</script>
 </body>
 </html>
